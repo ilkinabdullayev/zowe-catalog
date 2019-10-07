@@ -1,0 +1,76 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.8.RELEASE'
+    id 'java'
+    id 'jacoco'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'org.zowe.zowecatalog'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+
+ext {
+    zoweApimlVersion = '1.1.2'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url zoweArtifactoryRepository
+        credentials {
+            username zoweArtifactoryUser
+            password zoweArtifactoryPassword
+        }
+    }
+    jcenter()
+    mavenCentral()
+}
+
+jacoco {
+    toolVersion = '0.8.4'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+    doLast {
+        println "JaCoCo Test report written to: ${jacocoTestReport.reports.html.destination}/index.html"
+    }
+}
+
+jacocoTestReport.dependsOn test
+
+check.dependsOn jacocoTestReport
+
+task downloadZoweCatalogs(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.zowe.zowecatalog.catalog.CatalogDownloader"
+    doLast {
+        println 'Files have been downloaded'
+    }
+    shouldRunAfter 'build'
+}
+
+task buildAll {
+    dependsOn('build', 'downloadZoweCatalogs')
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "com.ca.mfaas.sdk:mfaas-integration-enabler-java:$zoweApimlVersion"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

@@ -1,0 +1,69 @@
+messages:
+  # Commons Internal Errors:
+  - key: org.zowe.commons.error.invalidMessageKey
+    number: ZWEAS001
+    type: ERROR
+    text: "Internal error: Invalid message key '%s' is provided. Please contact support for further assistance."
+
+  - key: org.zowe.commons.error.invalidMessageTextFormat
+    number: ZWEAS002
+    type: ERROR
+    text: "Internal error: Invalid message text format. Please contact support for further assistance."
+
+  - key: org.zowe.commons.zos.security.authentication.error.internal
+    number: ZWEAS003
+    type: ERROR
+    text: "Internal authentication error: %s. Please contact support for further assistance."
+
+  # API Mediation Layer integration:
+  - key: org.zowe.commons.apiml.serviceCertificateNotTrusted
+    number: ZWEAS201
+    type: ERROR
+    text: "Unable to connect to Zowe API Mediation Layer. The certificate of the service is not trusted by the API Mediation Layer: %s"
+
+  - key: org.zowe.commons.apiml.unableToRegister
+    number: ZWEAS202
+    type: ERROR
+    text: "Unable to connect to Zowe API Mediation Layer and register or update the service information: %s"
+
+  - key: org.zowe.commons.apiml.apimlCertificateNotTrusted
+    number: ZWEAS203
+    type: ERROR
+    text: "Unable to connect to Zowe API Mediation Layer. The certificate of API Mediation Layer is not trusted by the service: %s"
+
+
+  # REST API HTTP errors:
+  - key: org.zowe.commons.rest.unauthorized
+    number: ZWEAS401
+    type: ERROR
+    text: "The request has not been applied because it lacks valid authentication credentials for the target resource: %s"
+
+  - key: org.zowe.commons.rest.forbidden
+    number: ZWEAS403
+    type: ERROR
+    text: "The user is not authorized to the target resource: %s"
+
+  - key: org.zowe.commons.rest.methodNotAllowed
+    number: ZWEAS405
+    type: ERROR
+    text: "The request method has been disabled and cannot be used for requested resource."
+
+  - key: org.zowe.commons.rest.notFound
+    number: ZWEAS404
+    type: ERROR
+    text: "The service can not find requested resource."
+
+  - key: org.zowe.commons.rest.unsupportedMediaType
+    number: ZWEAS415
+    type: ERROR
+    text: "The media format of the requested data is not supported by the service, so the service is rejecting the request."
+
+  - key: org.zowe.commons.zos.security.authentication.error.expired
+    number: ZWEAS491
+    type: ERROR
+    text: "The password for the specified identity has expired."
+
+  - key: org.zowe.commons.rest.internalServerError
+    number: ZWEAS500
+    type: ERROR
+    text: "The service has encountered a situation it doesn't know how to handle. Please contact support for further assistance. More details are available in the log under the provided message instance ID"

@@ -1,0 +1,6 @@
+rootProject.name = 'zowe-catalog'
+
+include 'zowe-catalog-services'
+include 'zowe-common-core'
+include 'zowe-catalog-installer'
+
