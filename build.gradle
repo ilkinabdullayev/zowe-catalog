@@ -1,1 +1,76 @@
+ext {
+    uiVersion = 3.0
+}
 
+def zoweCatalogServicesDir = project(':zowe-catalog-services').projectDir;
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'de.undercouch:gradle-download-task:4.0.0'
+    }
+}
+
+
+apply plugin: 'de.undercouch.download'
+
+
+task downloadFront(type: Download) {
+    src "https://github.com/taban03/hackathon19/archive/v${uiVersion}.zip"
+    dest buildDir
+    overwrite false
+}
+
+task unzipFront(type: Copy) {
+    def zipFile = file("build/v${uiVersion}.zip")
+    def outputDir = file("build")
+
+    from zipTree(zipFile)
+    into outputDir
+    dependsOn 'downloadFront'
+}
+
+task runUiNpmInstall(type:Exec) {
+    workingDir "build/hackathon19-${uiVersion}/frontend"
+
+    commandLine 'npm', 'install'
+
+    //store the output instead of printing to the console:
+    standardOutput = new ByteArrayOutputStream()
+
+    //extension method stopTomcat.output() can be used to obtain the output:
+    ext.output = {
+        return standardOutput.toString()
+    }
+
+    dependsOn 'unzipFront'
+}
+
+task runUiNpmBuild(type:Exec) {
+    workingDir "build/hackathon19-${uiVersion}/frontend"
+
+    commandLine 'npm', 'run', 'build'
+
+    //store the output instead of printing to the console:
+    standardOutput = new ByteArrayOutputStream()
+
+    //extension method stopTomcat.output() can be used to obtain the output:
+    ext.output = {
+        return standardOutput.toString()
+    }
+
+    dependsOn 'runUiNpmInstall'
+}
+
+task copyUi(type: Copy) {
+    from("build/hackathon19-${uiVersion}/frontend/build")
+    into("${zoweCatalogServicesDir}/src/main/resources/static")
+    dependsOn 'runUiNpmBuild'
+    doLast {
+        project.delete(files("${buildDir}") {
+           // exclude '*.jar'
+        })
+    }
+}

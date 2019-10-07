@@ -1,13 +1,14 @@
 package org.zowe.zowecatalog.catalog;
 
 import lombok.Data;
-import org.zowe.zowecatalog.Component;
+import lombok.ToString;
+import org.zowe.zowecatalog.component.Component;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
+@ToString(exclude = "description")
 public class Catalog {
     private String version;
     private String description;

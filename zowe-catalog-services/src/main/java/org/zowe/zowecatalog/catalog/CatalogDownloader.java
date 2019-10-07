@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
-import org.zowe.zowecatalog.github.ZoweGithubService;
+import org.zowe.zowecatalog.github.GithubService;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -16,11 +16,11 @@ import java.io.IOException;
 public class CatalogDownloader {
 
     private static final String USER_DIR = System.getProperty("user.dir");
-    private static final String FORMAT_CATALOG_FILE = "%s/src/main/resources/statics/catalogs/zowe-catalog-v%s.json";
+    private static final String FORMAT_CATALOG_FILE = "%s/src/main/resources/static/catalogs/zowe-catalog-v%s.json";
 
     private String targetProjectDirectory = USER_DIR;
 
-    private final ZoweCatalogService zoweCatalogService;
+    private final CatalogFetcher catalogFetcher;
     private final ObjectMapper objectMapper;
 
     public CatalogDownloader() {
@@ -29,8 +29,8 @@ public class CatalogDownloader {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-        ZoweGithubService zoweGithubService = new ZoweGithubService(new RestTemplate(), objectMapper);
-        this.zoweCatalogService = new ZoweCatalogService(zoweGithubService, objectMapper);
+        GithubService zoweGithubService = new GithubService(new RestTemplate(), objectMapper);
+        this.catalogFetcher = new CatalogFetcher(zoweGithubService, null, objectMapper);
 
         if (!targetProjectDirectory.contains("zowe-catalog-services")) {
             targetProjectDirectory += File.separator + "zowe-catalog-services";
@@ -45,7 +45,7 @@ public class CatalogDownloader {
     public void run() {
         log.info("Catalog downloader started.");
 
-        zoweCatalogService.getAllCatalogsFromGithub().forEach(this::writeToFile);
+        catalogFetcher.getAllCatalogsFromGithub().forEach(this::writeToFile);
 
         log.info("Catalog downloader stopped.");
     }

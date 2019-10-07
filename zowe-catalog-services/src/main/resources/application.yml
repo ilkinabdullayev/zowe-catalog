@@ -1,16 +1,105 @@
-logging:
-  level:
-    org.zowe: DEBUG
-
-server:
-  port: 7272
-
-
-
 spring:
   main:
     bannerMode: "off"
   mvc:
     throw-exception-if-no-handler-found: true
   resources:
-      add-mappings: false
+    add-mappings: false
+  datasource:
+    continue-on-error: false
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:zowe_catalog;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS zowe_catalog
+    name: zowe_catalog
+    username: ZoweCatalog
+    password: ZoweCatalog123!
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+    hibernate:
+      ddl-auto: create-drop
+  h2:
+    console:
+      enabled: false
+      settings:
+        trace: false
+        web-allow-others: false
+      path: /zowe-catalog/console
+
+logging:
+  level:
+    ROOT: INFO
+    com.ca.mfaas: INFO
+    org.zowe: DEBUG
+    com.netflix: WARN
+    com.netflix.config: ERROR
+    com.netflix.discovery: ERROR
+    com.netflix.discovery.DiscoveryClient: OFF
+    org.zowe.zowecatalog.github.GithubService: OFF
+    com.netflix.discovery.shared.transport.decorator.RedirectingEurekaHttpClient: OFF
+    org.apache.catalina: WARN
+    org.apache.coyote: WARN
+    org.springframework: WARN
+    org.springframework.boot.web.embedded: INFO
+    springfox.documentation: WARN
+    com.ca.mfaas.eurekaservice.client.impl: WARN
+    org.zowe.commons.zos.security: INFO
+
+server:
+  port: 80
+
+springfox.documentation.swagger.v2.path: /apiDocs/v2
+
+apiml:
+  service:
+    serviceId: zowecatalog
+    title: Zowe Catalog Service
+    description: Zowe component versions
+    catalogUiTile:
+      id: catalog
+      title: Catalog Services
+      description: Component versions
+      version: 1.0.0
+    scheme: http
+    baseUrl: ${apiml.service.scheme}://${apiml.service.hostname}:${server.port}/
+    homePageUrl: https://${apiml.service.hostname}:${apiml.service.port}${server.servlet.contextPath}
+    homePageRelativeUrl:
+    statusPageRelativeUrl: actuator/info
+    healthCheckRelativeUrl: actuator/health
+    routes:
+      - gatewayUrl: api/v1
+        serviceUrl: /api/v1
+      - gatewayUrl: ui/v1
+        serviceUrl: /
+    apiInfo:
+      - apiId: org.zowe.zowecatalog.api
+        gatewayUrl: api/v1
+        version: 1.0.0
+        title: Zowe Catalog
+        description: Zowe component versions
+        swaggerUrl: ${apiml.service.scheme}://${apiml.service.hostname}:${server.port}/apiDocs/v2
+
+management.endpoints.web.exposure.include: "*"
+---
+spring.profiles: https
+
+server.ssl:
+  enabled: true
+  protocol: TLSv1.2
+  enabledProtocols: TLSv1.2
+  ciphers: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384
+
+apiml.service.scheme: https
+
+---
+spring.profiles: debug
+
+logging:
+  level:
+    org.zowe: DEBUG
+    org.springframework: INFO
+    org.apache.catalina: INFO
+    org.apache.juli.logging: INFO
+    com.netflix: INFO
+    springfox.documentation: INFO
+    com.ca.mfaas.eurekaservice.client.impl: INFO
+    org.zowe.commons.zos.security: DEBUG

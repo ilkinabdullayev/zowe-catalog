@@ -7,5 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class Tag {
     private String name;
-    private String mergeCommitUrl;
+    private String mergeCommitHash;
 }

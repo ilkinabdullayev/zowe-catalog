@@ -6,8 +6,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.zowe.zowecatalog.cache.ZoweCatalogCacheService;
-import org.zowe.zowecatalog.github.ZoweGithubService;
-import org.zowe.zowecatalog.util.FileUtil;
 
 @Slf4j
 @Component

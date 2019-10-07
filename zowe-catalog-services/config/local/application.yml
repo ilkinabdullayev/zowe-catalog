@@ -1,0 +1,25 @@
+# Configuration for running the locally on your workstation
+spring.profiles.active: https,diag,debug
+
+server:
+  address: 0.0.0.0
+  port: 80
+  ssl:
+    keyAlias: localhost
+    keyPassword: password
+    keyStore: config/local/keystore.p12
+    keyStorePassword: password
+    keyStoreType: PKCS12
+    trust-store: config/local/truststore.p12
+    trust-store-password: password
+    trust-store-type: PKCS12
+
+apiml:
+  enabled: true
+  service:
+    hostname: localhost
+    ipAddress: 127.0.0.1
+    discoveryServiceUrls:
+      - https://localhost:40003/eureka
+
+github.token:
