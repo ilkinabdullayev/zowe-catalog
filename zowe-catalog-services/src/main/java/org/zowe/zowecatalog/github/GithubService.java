@@ -46,31 +46,14 @@ public class GithubService {
     @Value("${github.token}")
     private String githubToken;
 
-    public Map<String, List<Content>> getManifestJsonContents() {
-        return getAllValidManifestJsonContents()
+    public Map<String, List<Content>> getMapJsonContents() {
+        return getListManifestJsonContents()
                 .stream()
                 .sorted(Comparator.comparing(c -> c.getCommit().getDateTime(), Comparator.reverseOrder()))
                 .collect(Collectors.groupingBy(Content::getVersion));
     }
 
-    public List<Release> getRepositoryReleases(String repo) {
-        List<Release> releases = new ArrayList<>();
-        List<Tag> tags = getRepositoryTags(repo);
-        tags.parallelStream().forEach(tag -> {
-            if (EXCLUDED_TAG_NAMES.contains(tag.getName())) {
-                log.warn("{} is included EXCLUDED_TAG_NAMES. skipped", tag.getName());
-                return;
-            }
-
-            Release release = getRelease(tag, repo);
-            releases.add(release);
-        });
-
-
-        return releases;
-    }
-
-    private List<Content> getAllValidManifestJsonContents() {
+    public List<Content> getListManifestJsonContents() {
         List<Commit> commits = getManifestJsonCommitHashs();
         List<Content> contents = new ArrayList<>();
         commits.forEach(commit -> {
@@ -94,6 +77,23 @@ public class GithubService {
         });
 
         return contents;
+    }
+
+    public List<Release> getRepositoryReleases(String repo) {
+        List<Release> releases = new ArrayList<>();
+        List<Tag> tags = getRepositoryTags(repo);
+        tags.parallelStream().forEach(tag -> {
+            if (EXCLUDED_TAG_NAMES.contains(tag.getName())) {
+                log.warn("{} is included EXCLUDED_TAG_NAMES. skipped", tag.getName());
+                return;
+            }
+
+            Release release = getRelease(tag, repo);
+            releases.add(release);
+        });
+
+
+        return releases;
     }
 
     private Optional<String> getManifestJsonContentByCommit(String commit) {
