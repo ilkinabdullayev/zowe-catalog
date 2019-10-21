@@ -1,8 +1,7 @@
 # Configuration for running the locally on your workstation
-spring.profiles.active: https,diag,debug
+spring.profiles.active: https,debug
 
 server:
-  address: 0.0.0.0
   port: 80
   ssl:
     keyAlias: localhost
@@ -17,9 +16,10 @@ server:
 apiml:
   enabled: true
   service:
+    serviceId: zowecatalog
     hostname: localhost
     ipAddress: 127.0.0.1
     discoveryServiceUrls:
-      - https://localhost:40003/eureka
+      - https://localhost:10011/eureka
 
 github.token:
