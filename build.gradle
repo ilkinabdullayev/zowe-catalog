@@ -1,5 +1,5 @@
 ext {
-    uiVersion = 6.0
+    uiVersion = 8.0
 }
 
 def zoweCatalogServicesDir = project(':zowe-catalog-services').projectDir;
